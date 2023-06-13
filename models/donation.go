@@ -1,16 +1,15 @@
 package models
 
-import "time"
 
 type Donation struct {
 	ID   int `json:"id"`
-	Date time.Time `json:"date"`
+	Date string `json:"date"`
 	Money int `json:"money"`
 }
 
 type DonationResponse struct {
 	ID   int `json:"id"`
-	Date time.Time `json:"date"`
+	Date string `json:"date"`
 	Money int `json:"money"`
 }
 

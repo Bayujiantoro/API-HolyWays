@@ -33,7 +33,7 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 		Goals_day: c.FormValue("Goals_day"),
 		Image: dataFile,
 	}
-	fmt.Println("ini request : ", request)
+	
 	
 	fund := models.Fund {
 		Title: request.Title,
@@ -45,7 +45,6 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 	fmt.Println("ini fund : ", fund)
 	data, err := h.FundRepo.CreateFund(fund)
 	
-	fmt.Println("ini data : ", data)
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
