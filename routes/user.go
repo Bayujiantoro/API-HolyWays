@@ -2,6 +2,7 @@ package routes
 
 import (
 	"holyways/handlers"
+	"holyways/pkg/middleware"
 	postgre "holyways/pkg/postgresql"
 	repository "holyways/repository"
 
@@ -13,8 +14,8 @@ func UserRoutes(e *echo.Group) {
 	h := handlers.HandlerUser(userRepo)
 
 	e.GET("/users", h.FindUsers)
-	e.POST("/users", h.CreateUser)
+	e.POST("/users", middleware.Auth(h.CreateUser))
 	e.GET("/users/:id", h.GetUser)
-	e.PATCH("/users/:id", h.UpdateUser)
-	e.DELETE("/users/:id", h.DeleteUser)
+	e.PATCH("/users/:id", middleware.Auth(h.UpdateUser))
+	e.DELETE("/users/:id", middleware.Auth(h.DeleteUser))
 }

@@ -14,9 +14,9 @@ func FundRoutes(e *echo.Group) {
 
 	h := handlers.FundHandler(fund)
 
-	e.POST("/fund", middleware.UploadFile(h.CreateFund))
+	e.POST("/fund", middleware.Auth(middleware.UploadFile(h.CreateFund)))
 	e.GET("/fund", h.FindFund)
-	e.GET("/fund/:id", h.GetFund)
-	e.PATCH("/fund/:id", middleware.UploadFile(h.UpdateFund))
-	e.DELETE("/fund/:id", h.DeleteFund)
+	e.GET("/fund/:id", middleware.Auth(h.GetFund))
+	e.PATCH("/fund/:id", middleware.Auth(middleware.UploadFile(h.UpdateFund)))
+	e.DELETE("/fund/:id", middleware.Auth(h.DeleteFund))
 }

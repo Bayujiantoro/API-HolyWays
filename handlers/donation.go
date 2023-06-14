@@ -104,6 +104,7 @@ func (h *handlerDonation) FindDonation(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
+	
 	return c.JSON(http.StatusOK, dto.SuccesResult{
 		Code: http.StatusOK,
 		Data: donation,

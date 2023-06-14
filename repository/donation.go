@@ -22,7 +22,7 @@ func RepositoryDonation(db *gorm.DB) *repository {
 func (r *repository) FindDonation()([]models.Donation, error) {
 	var donation []models.Donation
 
-	err := r.db.Preload("User").Find(&donation).Error
+	err := r.db.Preload("User").Preload("Fund").Find(&donation).Error
 	return donation , err
 }
 
@@ -34,7 +34,7 @@ func (r *repository) CreateDonation(donation models.Donation)(models.Donation, e
 func (r *repository) GetDonation(ID int) (models.Donation, error) {
 	var Donation models.Donation
 
-	err := r.db.Preload("User").First(&Donation, ID).Error
+	err := r.db.Preload("User").Preload("Fund").First(&Donation, ID).Error
 
 	return Donation, err
 }

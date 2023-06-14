@@ -14,8 +14,8 @@ func DonationRoutes(e *echo.Group) {
 	h := handlers.DonationHandler(donation)
 
 	e.POST("/donation", middleware.Auth(h.CreateDonation))
-	e.GET("/donation", h.FindDonation)
-	e.GET("/donation/:id", h.GetDonation)
-	e.PATCH("/donation/:id", h.UpdateDonation)
-	e.DELETE("/donation:id", h.DeleteDonation)
+	e.GET("/donation", middleware.Auth(h.FindDonation))
+	e.GET("/donation/:id", middleware.Auth(h.GetDonation))
+	e.PATCH("/donation/:id", middleware.Auth(h.UpdateDonation))
+	e.DELETE("/donation/:id", middleware.Auth(h.DeleteDonation))
 }
