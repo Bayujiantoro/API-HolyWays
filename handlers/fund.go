@@ -24,23 +24,29 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 
 	
-	Goals_money , _ := strconv.Atoi(c.FormValue("Goals_money"))
+	GoalsMoney , _ := strconv.Atoi(c.FormValue("GoalsMoney"))
+	UserID , _ := strconv.Atoi(c.FormValue("UserID"))
+
 	
 	request := models.Fund{
 		Title: c.FormValue("Title"),
 		Description: c.FormValue("Description"),
-		Goals_money: Goals_money,
-		Goals_day: c.FormValue("Goals_day"),
+		GoalsMoney: GoalsMoney,
+		GoalsDay: c.FormValue("GoalsDay"),
 		Image: dataFile,
+		UserID: UserID,
 	}
 	
+	User, _ := h.FundRepo.GetUserById(request.UserID)
 	
 	fund := models.Fund {
 		Title: request.Title,
 		Description: request.Description,
-		Goals_money: request.Goals_money,
-		Goals_day: request.Goals_day,
+		GoalsMoney: request.GoalsMoney,
+		GoalsDay: request.GoalsDay,
 		Image: dataFile,
+		UserID: request.UserID,
+		User: User,
 	}
 	fmt.Println("ini fund : ", fund)
 	data, err := h.FundRepo.CreateFund(fund)
@@ -64,14 +70,16 @@ func (h *handlerFund) UpdateFund(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	Goals_money , _ := strconv.Atoi(c.FormValue("Goals_money"))
+	GoalsMoney , _ := strconv.Atoi(c.FormValue("GoalsMoney"))
+	UserID , _ := strconv.Atoi(c.FormValue("UserID"))
 
 	request := models.Fund{
 		Title: c.FormValue("Title"),
 		Description: c.FormValue("Description"),
-		Goals_money: Goals_money,
-		Goals_day: c.FormValue("Goals_day"),
+		GoalsMoney: GoalsMoney,
+		GoalsDay: c.FormValue("GoalsDay"),
 		Image: dataFile,
+		UserID: UserID,
 	}
 
 	fund, err := h.FundRepo.GetFund(id)
@@ -88,14 +96,17 @@ func (h *handlerFund) UpdateFund(c echo.Context) error {
 	if request.Description != "" {
 		fund.Description = request.Description
 	}
-	if request.Goals_money > 0 {
-		fund.Goals_money = request.Goals_money
+	if request.GoalsMoney > 0 {
+		fund.GoalsMoney = request.GoalsMoney
 	} 
-	if request.Goals_day != "" {
-		fund.Goals_day = request.Goals_day
+	if request.GoalsDay != "" {
+		fund.GoalsDay = request.GoalsDay
 	}
 	if request.Image != "" {
 		fund.Image = request.Image
+	} 
+	if request.UserID > 0 {
+		fund.UserID = request.UserID
 	}
 
 	data, err := h.FundRepo.UpdateFund(fund)
@@ -167,9 +178,11 @@ func convertResponseFund(fund models.Fund) funddto.FundResponse{
 		ID: fund.ID,
 		Title: fund.Title,
 		Description: fund.Description,
-		Goals_money: fund.Goals_money,
-		Goals_day: fund.Goals_day,
+		GoalsMoney: fund.GoalsMoney,
+		GoalsDay: fund.GoalsDay,
 		Image: fund.Image,
+		UserID: fund.UserID,
+		User: fund.User,
 
 	}
 }

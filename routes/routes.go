@@ -6,4 +6,5 @@ func RouteInit(e *echo.Group) {
 	UserRoutes(e)
 	FundRoutes(e)
 	DonationRoutes(e)
+	AuthRoutes(e)
 }

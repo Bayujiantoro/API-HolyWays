@@ -7,9 +7,11 @@ import (
 	"holyways/models"
 	"holyways/repository"
 	"net/http"
+	"time"
 
 	"strconv"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,14 +25,30 @@ func DonationHandler(Donation repository.DonationRepo) *handlerDonation {
 
 func (h *handlerDonation) CreateDonation(c echo.Context) error  {
 	Money, _ := strconv.Atoi(c.FormValue("Money"))
+	FundID, _ := strconv.Atoi(c.FormValue("FundID"))
+
+
+	userLogin := c.Get("userLogin")
+	fmt.Println("userLogin : ", userLogin)
+	userID := userLogin.(jwt.MapClaims)["id"].(float64)
+	user, _ := h.DonationRepo.GetUserById(int(userID))
+
+	Fund, _ := h.DonationRepo.GetFundById(FundID)
+	fmt.Println(user)
+
 	request := models.Donation{
-		Date: c.FormValue("Date"),
+		Date: time.Now(),
 		Money: Money,
+		FundID: FundID,
+		UserID: int(userID),
+		User: user,
+		Fund: Fund,
 	}
 	fmt.Println("ini request : ", request)
 
 	data, err := h.DonationRepo.CreateDonation(request)
 	fmt.Println("ini data : ", data)
+	
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
@@ -48,7 +66,7 @@ func (h *handlerDonation) UpdateDonation(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	Money, _ := strconv.Atoi(c.FormValue("Money"))
 	request := models.Donation{
-		Date: c.FormValue("Date"),
+		Date: time.Now(),
 		Money: Money,
 	}
 	fmt.Println("ini request : ", request)
@@ -59,9 +77,7 @@ func (h *handlerDonation) UpdateDonation(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
-	if request.Date != "" {
-		donation.Date = request.Date
-	}
+	
 	if request.Money > 0 {
 		donation.Date = request.Date
 	}
@@ -143,5 +159,9 @@ func convertResponseDonation(donation models.Donation) donationdto.DonationRespo
 		ID: donation.ID,
 		Date: donation.Date,
 		Money: donation.Money,
+		UserID: donation.UserID,
+		User: donation.User,
+		FundID: donation.FundID,
+		Fund: donation.Fund,
 	}
 }

@@ -12,6 +12,8 @@ type DonationRepo interface {
 	GetDonation(ID int)(models.Donation, error)
 	DeleteDonation(donation models.Donation,ID int)(models.Donation, error)
 	UpdateDonation(Donation models.Donation) (models.Donation, error)
+	GetUserById(ID int) (models.User, error)
+	GetFundById(ID int) (models.Fund, error)
 }
 func RepositoryDonation(db *gorm.DB) *repository {
 	return &repository{db}
@@ -20,19 +22,19 @@ func RepositoryDonation(db *gorm.DB) *repository {
 func (r *repository) FindDonation()([]models.Donation, error) {
 	var donation []models.Donation
 
-	err := r.db.Find(&donation).Error
+	err := r.db.Preload("User").Find(&donation).Error
 	return donation , err
 }
 
 func (r *repository) CreateDonation(donation models.Donation)(models.Donation, error) {
-	err := r.db.Create(&donation).Error
+	err := r.db.Preload("User").Create(&donation).Error
 	return donation , err
 } 
 
 func (r *repository) GetDonation(ID int) (models.Donation, error) {
 	var Donation models.Donation
 
-	err := r.db.First(&Donation, ID).Error
+	err := r.db.Preload("User").First(&Donation, ID).Error
 
 	return Donation, err
 }
@@ -47,4 +49,11 @@ func (r *repository) DeleteDonation(Donation models.Donation, ID int) (models.Do
 	err := r.db.Delete(&Donation, ID).Scan(&Donation).Error
 
 	return Donation, err
+}
+
+func (r *repository) GetFundById(ID int) (models.Fund, error) {
+	var Fund models.Fund
+	err := r.db.Preload("Fund").First(&Fund, ID).Error
+
+	return Fund, err
 }
