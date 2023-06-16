@@ -32,7 +32,7 @@ func (r *repository) Login(email string) (models.User, error) {
 
 func (r *repository) CheckAuth(ID int) (models.User, error){
 	var user models.User
-	err := r.db.Preload("Fund").Preload("Donation").First(&user, ID).Error
+	err := r.db.Preload("Fund").Preload("Donation.Fund").First(&user, ID).Error
 
 	return user, err
 }

@@ -12,10 +12,10 @@ type CreateFund struct {
 }
 
 type FundResponse struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title" `
-	Description string `json:"description"`
-	Image       string `json:"image" form:"image"`
+	ID          int    `json:"Id"`
+	Title       string `json:"Title" `
+	Description string `json:"Description"`
+	Image       string `json:"Image" form:"image"`
 	GoalsMoney  int    `json:"GoalsMoney"`
 	GoalsDay    string `json:"GoalsDay"`
 	UserID      int    `json:"UserID"`

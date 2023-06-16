@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type handlerFund struct {
@@ -25,7 +26,6 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 
 	
 	GoalsMoney , _ := strconv.Atoi(c.FormValue("GoalsMoney"))
-	UserID , _ := strconv.Atoi(c.FormValue("UserID"))
 
 	
 	request := models.Fund{
@@ -34,10 +34,14 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 		GoalsMoney: GoalsMoney,
 		GoalsDay: c.FormValue("GoalsDay"),
 		Image: dataFile,
-		UserID: UserID,
+		
 	}
+
+	userLogin := c.Get("userLogin")
+	fmt.Println("userLogin : ", userLogin)
+	userID := userLogin.(jwt.MapClaims)["id"].(float64)
 	
-	User, _ := h.FundRepo.GetUserById(request.UserID)
+	User, _ := h.FundRepo.GetUserById(int(userID))
 	
 	fund := models.Fund {
 		Title: request.Title,
