@@ -14,6 +14,7 @@ type DonationRepo interface {
 	UpdateDonation(Donation models.Donation) (models.Donation, error)
 	GetUserById(ID int) (models.User, error)
 	GetFundById(ID int) (models.Fund, error)
+	UpdateDonateMidtrans(status string, orderId int) (models.Donation, error)
 }
 func RepositoryDonation(db *gorm.DB) *repository {
 	return &repository{db}
@@ -56,4 +57,13 @@ func (r *repository) GetFundById(ID int) (models.Fund, error) {
 	err := r.db.Preload("Fund").First(&Fund, ID).Error
 
 	return Fund, err
+}
+
+func (r *repository) UpdateDonateMidtrans(status string, orderId int) (models.Donation, error) {
+	var donation models.Donation
+	r.db.Preload("User").Preload("Fund").First(&donation, orderId)
+	
+	donation.Status = status
+	err := r.db.Save(&donation).Error
+	return donation, err
 }
