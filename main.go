@@ -5,10 +5,9 @@ import (
 	"holyways/database"
 	postgre "holyways/pkg/postgresql"
 	"holyways/routes"
-	"net/http"
-
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -21,6 +20,12 @@ func main() {
 
 	e := echo.New()
 
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH, echo.DELETE},
+		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
+	  }))
+
 	postgre.DatabaseConnection()
 	database.RunMigration()
 
@@ -28,8 +33,4 @@ func main() {
 
 	fmt.Println("Running on Port : 5200")
 	e.Logger.Fatal(e.Start("localhost:5200"))
-}
-
-func helloworld(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello world")
 }

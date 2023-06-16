@@ -7,8 +7,9 @@ type Donation struct {
 	Date  time.Time `json:"Date"`
 	Money int       `json:"Money"`
 
-	FundID int `json:"FundID"`
-	Fund Fund `json:"Fund"`
+	FundID int    `json:"FundID" gorm:"type: int"`
+	Fund   Fund   `json:"Fund" gorm:"foreignKey:FundID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+
 	UserID int  `json:"UserID" gorm:"type: int"`
 	User   User	`json:"User" gorm:"foreignKey:UserID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
@@ -20,7 +21,6 @@ type DonationResponse struct {
 	FundID int       `json:"FundID"`
 
 	UserID int          `json:"UserID"`
-	User   UserResponse `json:"User"`
 }
 
 func (Donation) TableName() string {

@@ -20,4 +20,5 @@ type FundResponse struct {
 	GoalsDay    string `json:"GoalsDay"`
 	UserID      int    `json:"UserID"`
 	User        models.User
+	Donation 	[]models.Donation
 }

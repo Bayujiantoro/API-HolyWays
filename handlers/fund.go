@@ -183,6 +183,7 @@ func convertResponseFund(fund models.Fund) funddto.FundResponse{
 		Image: fund.Image,
 		UserID: fund.UserID,
 		User: fund.User,
+		Donation: fund.Donation,
 
 	}
 }

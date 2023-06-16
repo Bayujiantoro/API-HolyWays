@@ -23,19 +23,19 @@ func RepositoryFund(db *gorm.DB) *repository {
 func (r *repository) FindFund()([]models.Fund, error) {
 	var fund []models.Fund
 
-	err := r.db.Preload("User").Find(&fund).Error
+	err := r.db.Preload("User").Preload("Donation.User").Find(&fund).Error
 	return fund , err
 }
 
 func (r *repository) CreateFund(fund models.Fund)(models.Fund, error) {
-	err := r.db.Preload("User").Create(&fund).Error
+	err := r.db.Preload("User").Preload("Donation.User").Create(&fund).Error
 	return fund , err
 } 
 
 func (r *repository) GetFund(ID int) (models.Fund, error) {
 	var fund models.Fund
 
-	err := r.db.Preload("User").First(&fund, ID).Error
+	err := r.db.Preload("User").Preload("Donation.User").First(&fund, ID).Error
 
 	return fund, err
 }

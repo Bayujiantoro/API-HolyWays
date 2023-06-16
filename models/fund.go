@@ -7,9 +7,11 @@ type Fund struct {
 	Image       string            `json:"Image" gorm:"type:varchar(255)"`
 	GoalsMoney  int               `json:"GoalsMoney"`
 	GoalsDay    string            `json:"GoalsDay"`
-
+	
 	UserID int       `json:"UserID" gorm:"type:int"`
 	User   User      `json:"User" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+
+	Donation []Donation `json:"Donation" gorm:"foreignKey:FundID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type FundResponse struct {
