@@ -5,6 +5,8 @@ import (
 	"holyways/database"
 	postgre "holyways/pkg/postgresql"
 	"holyways/routes"
+	"os"
+
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -12,11 +14,8 @@ import (
 
 func main() {
 
-	err := godotenv.Load()
+	 godotenv.Load()
 
-	if err != nil {
-		panic("env failed")
-	}
 
 	e := echo.New()
 
@@ -30,7 +29,8 @@ func main() {
 	database.RunMigration()
 
 	routes.RouteInit(e.Group("/api/v1"))
+	var PORT = os.Getenv("PORT")
 
 	fmt.Println("Running on Port : 5200")
-	e.Logger.Fatal(e.Start("localhost:5200"))
+	e.Logger.Fatal(e.Start(":" + PORT))
 }
