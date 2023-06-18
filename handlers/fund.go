@@ -8,9 +8,8 @@ import (
 	"holyways/repository"
 	"net/http"
 	"strconv"
-
-	"github.com/labstack/echo/v4"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/labstack/echo/v4"
 )
 
 type handlerFund struct {
@@ -24,37 +23,33 @@ func FundHandler(Fund repository.FundRepo) *handlerFund {
 func (h *handlerFund) CreateFund(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 
-	
-	GoalsMoney , _ := strconv.Atoi(c.FormValue("GoalsMoney"))
+	GoalsMoney, _ := strconv.Atoi(c.FormValue("GoalsMoney"))
 
-	
 	request := models.Fund{
-		Title: c.FormValue("Title"),
+		Title:       c.FormValue("Title"),
 		Description: c.FormValue("Description"),
-		GoalsMoney: GoalsMoney,
-		GoalsDay: c.FormValue("GoalsDay"),
-		Image: dataFile,
-		
+		GoalsMoney:  GoalsMoney,
+		GoalsDay:    c.FormValue("GoalsDay"),
+		Image:       dataFile,
 	}
 
 	userLogin := c.Get("userLogin")
 	fmt.Println("userLogin : ", userLogin)
 	userID := userLogin.(jwt.MapClaims)["id"].(float64)
-	
+
 	User, _ := h.FundRepo.GetUserById(int(userID))
-	
-	fund := models.Fund {
-		Title: request.Title,
+
+	fund := models.Fund{
+		Title:       request.Title,
 		Description: request.Description,
-		GoalsMoney: request.GoalsMoney,
-		GoalsDay: request.GoalsDay,
-		Image: dataFile,
-		UserID: request.UserID,
-		User: User,
+		GoalsMoney:  request.GoalsMoney,
+		GoalsDay:    request.GoalsDay,
+		Image:       dataFile,
+		UserID:      request.UserID,
+		User:        User,
 	}
 	fmt.Println("ini fund : ", fund)
 	data, err := h.FundRepo.CreateFund(fund)
-	
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
@@ -68,22 +63,20 @@ func (h *handlerFund) CreateFund(c echo.Context) error {
 	})
 }
 
-
-
 func (h *handlerFund) UpdateFund(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	GoalsMoney , _ := strconv.Atoi(c.FormValue("GoalsMoney"))
-	UserID , _ := strconv.Atoi(c.FormValue("UserID"))
+	GoalsMoney, _ := strconv.Atoi(c.FormValue("GoalsMoney"))
+	UserID, _ := strconv.Atoi(c.FormValue("UserID"))
 
 	request := models.Fund{
-		Title: c.FormValue("Title"),
+		Title:       c.FormValue("Title"),
 		Description: c.FormValue("Description"),
-		GoalsMoney: GoalsMoney,
-		GoalsDay: c.FormValue("GoalsDay"),
-		Image: dataFile,
-		UserID: UserID,
+		GoalsMoney:  GoalsMoney,
+		GoalsDay:    c.FormValue("GoalsDay"),
+		Image:       dataFile,
+		UserID:      UserID,
 	}
 
 	fund, err := h.FundRepo.GetFund(id)
@@ -96,19 +89,19 @@ func (h *handlerFund) UpdateFund(c echo.Context) error {
 
 	if request.Title != "" {
 		fund.Title = request.Title
-	} 
+	}
 	if request.Description != "" {
 		fund.Description = request.Description
 	}
 	if request.GoalsMoney > 0 {
 		fund.GoalsMoney = request.GoalsMoney
-	} 
+	}
 	if request.GoalsDay != "" {
 		fund.GoalsDay = request.GoalsDay
 	}
 	if request.Image != "" {
 		fund.Image = request.Image
-	} 
+	}
 	if request.UserID > 0 {
 		fund.UserID = request.UserID
 	}
@@ -157,14 +150,16 @@ func (h *handlerFund) GetFund(c echo.Context) error {
 
 func (h *handlerFund) DeleteFund(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	fund , err := h.FundRepo.GetFund(id)
+	fund, err := h.FundRepo.GetFund(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),
 		})
 	}
-	data , err := h.FundRepo.DeleteFund(fund, id)
+
+
+	data, err := h.FundRepo.DeleteFund(fund, id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
 			Code:    http.StatusBadRequest,
@@ -177,17 +172,16 @@ func (h *handlerFund) DeleteFund(c echo.Context) error {
 	})
 }
 
-func convertResponseFund(fund models.Fund) funddto.FundResponse{
+func convertResponseFund(fund models.Fund) funddto.FundResponse {
 	return funddto.FundResponse{
-		ID: fund.ID,
-		Title: fund.Title,
+		ID:          fund.ID,
+		Title:       fund.Title,
 		Description: fund.Description,
-		GoalsMoney: fund.GoalsMoney,
-		GoalsDay: fund.GoalsDay,
-		Image: fund.Image,
-		UserID: fund.UserID,
-		User: fund.User,
-		Donation: fund.Donation,
-
+		GoalsMoney:  fund.GoalsMoney,
+		GoalsDay:    fund.GoalsDay,
+		Image:       fund.Image,
+		UserID:      fund.UserID,
+		User:        fund.User,
+		Donation:    fund.Donation,
 	}
 }

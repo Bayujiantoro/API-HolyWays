@@ -121,6 +121,7 @@ func (h *handlerDonation) Notification(c echo.Context) error {
 	// donation, _ := h.DonationRepo.GetDonation(order_id)
 	fmt.Print("ini payloadnya", notificationPayload)
 
+	fmt.Println("transaction satus handler : ",transactionStatus)
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
 			h.DonationRepo.UpdateDonateMidtrans("pending",order_id)

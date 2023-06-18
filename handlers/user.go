@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	dto "holyways/dto/result"
 	userdto "holyways/dto/user"
 	"holyways/models"
@@ -75,15 +76,22 @@ func (h *userHandler) CreateUser(c echo.Context) error {
 }
 
 func(h *userHandler) UpdateUser(c echo.Context) error {
-	request := new(userdto.CreateUser)
-	id, _ := strconv.Atoi(c.Param("id"))
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{
-			Code:    http.StatusBadRequest,
-			Message: err.Error(),
-		})
+	dataFile := c.Get("dataFile").(string)
+	fmt.Println("image : ", dataFile)
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		println("error params")
 	}
-
+	
+	request := models.User {
+		Name: c.FormValue("Name"),
+		Email: c.FormValue("Email"),
+		Password: c.FormValue("Password"),
+		ProfilePicture: dataFile,
+		Phone: c.FormValue("Phone"),
+	}
+	
+	fmt.Println("request : ",request)
 	user, err := h.UserRepo.GetUser(id)
 	
 	if err != nil {
@@ -92,7 +100,7 @@ func(h *userHandler) UpdateUser(c echo.Context) error {
 			Message: err.Error(),
 		})}
 	if request.Name != "" {
-		user.Name = request.Email
+		user.Name = request.Name
 	}
 	if request.Email != "" {
 		user.Email = request.Email
@@ -102,6 +110,9 @@ func(h *userHandler) UpdateUser(c echo.Context) error {
 	}
 	if request.Phone != "" {
 		user.Phone = request.Phone
+	}
+	if request.ProfilePicture != "" {
+		user.ProfilePicture = request.ProfilePicture
 	}
 	data, err := h.UserRepo.UpdateUser(user)
 
@@ -161,6 +172,7 @@ func convertResponse(user models.User) userdto.UserResponse {
 		Name:     user.Name,
 		Email:    user.Email,
 		Phone:    user.Phone,
+		ProfilePicture: user.ProfilePicture,
 		Password: user.Password,
 		Fund: user.Fund,
 		Donation: user.Donation,

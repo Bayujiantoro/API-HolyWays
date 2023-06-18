@@ -6,6 +6,7 @@ type User struct {
 	Email    string `json:"Email" gorm:"type:varchar(255)"`
 	Password string `json:"Password" gorm:"type:varchar(255)"`
 	Phone    string `json:"Phone"`
+	ProfilePicture string	`json:"ProfilePicture" gorm:"type:varchar(255)"`
 	Fund     []Fund `json:"Funds" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Donation []Donation `json:"Donation" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
@@ -17,6 +18,7 @@ type UserResponse struct {
 	Email    string `json:"email" gorm:"type: varchar(255)"`
 	Password string `json:"password" gorm:"type: varchar(255)"`
 	Phone string `json:"phone"`
+	ProfilePicture string	`json:"ProfilePicture" gorm:"type:varchar(255)"`
 	Fund Fund `json:"Fund"`
 	Donation Donation	`json:"Donation"`
 }

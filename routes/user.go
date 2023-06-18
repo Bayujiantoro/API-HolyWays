@@ -16,6 +16,6 @@ func UserRoutes(e *echo.Group) {
 	e.GET("/users", h.FindUsers)
 	e.POST("/users", middleware.Auth(h.CreateUser))
 	e.GET("/users/:id", h.GetUser)
-	e.PATCH("/users/:id", middleware.Auth(h.UpdateUser))
+	e.PATCH("/users/:id", middleware.Auth(middleware.UploadFile(h.UpdateUser)))
 	e.DELETE("/users/:id", middleware.Auth(h.DeleteUser))
 }

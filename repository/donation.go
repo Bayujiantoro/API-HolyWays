@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"holyways/models"
 
 	"gorm.io/gorm"
@@ -64,6 +65,8 @@ func (r *repository) UpdateDonateMidtrans(status string, orderId int) (models.Do
 	r.db.Preload("User").Preload("Fund").First(&donation, orderId)
 	
 	donation.Status = status
+	fmt.Println("repository status : "+ status)
+	fmt.Println("repository Doantion status : "+ donation.Status)
 	err := r.db.Save(&donation).Error
 	return donation, err
 }
